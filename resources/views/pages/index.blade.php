@@ -1,3 +1,5 @@
 <x-layout>
-    <h1>Welcome to WORKOPIA</h1>
+    <h1>Welcome To Workopia</h1>
+    
+    <x-bottom-banner/>
 </x-layout>

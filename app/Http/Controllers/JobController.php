@@ -10,7 +10,7 @@ class JobController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index():View
+    public function index(): View
     {
         $jobs = [
             "Web Developer",
@@ -24,7 +24,7 @@ class JobController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create():View
+    public function create(): View
     {
         return view("jobs.create");
     }
@@ -32,7 +32,7 @@ class JobController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request):string
+    public function store(Request $request): string
     {
         return "Store";
     }
@@ -40,15 +40,15 @@ class JobController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id):string
+    public function show(string $id): string
     {
-        return  "Showing Job: " . $id;
+        return "Showing Job: " . $id;
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id):string
+    public function edit(string $id): string
     {
         return "Edit";
     }
@@ -56,7 +56,7 @@ class JobController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id):string
+    public function update(Request $request, string $id): string
     {
         return "Update";
     }
@@ -64,7 +64,7 @@ class JobController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id):string
+    public function destroy(string $id): string
     {
         return "Delete";
     }
