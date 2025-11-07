@@ -3,7 +3,7 @@
 
     <ul class="">
         @forelse ($jobs as $job)
-            <li> {{ $job }}</li>
+            <li><a href="{{route('jobs.show', $job->id)}}">{{ $job->title }} </a> - {{ $job->description }}</li>
         @empty
             <p>No Jobs Present</p>
         @endforelse

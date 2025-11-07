@@ -7,8 +7,22 @@
 
         <form action="/jobs" method="POST" class="flex flex-col gap-3">
             @csrf
-            <input type="text" name="title" placeholder="title" id="title">
-            <input type="text" name="description" placeholder="description" id="description">
+            <div>
+                <input type="text" name="title" placeholder="title" id="title" value="{{ old("title") }}">
+                @error("title")
+                    <div class="text-red-500 mt-2 text-sm">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
+            <div>
+                <input type="text" name="description" placeholder="description" id="description" value="{{ old("description") }}">
+                @error("description")
+                    <div class="text-red-500 mt-2 text-sm">
+                        {{ $message }}
+                    </div>
+                @enderror
+            </div>
             <button type="submit"
                 class="mr-auto mt-5 bg-blue-500 px-6 py-3 rounded-xl text-white hover:text-blue-300">Submit</button>
         </form>
