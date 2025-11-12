@@ -49,7 +49,7 @@ class JobController extends Controller
             "contact_phone" => "nullable|string",
             "company_name" => "required|string",
             "company_description" => "nullable|string",
-            "company_logo" => "nullable|image|mimes:jpeg,jpg,png,gif|max2048",
+            "company_logo" => "nullable|image|mimes:jpeg,jpg,png,gif|max:2048",
             "company_website" => "nullable|url"
         ]);
 
@@ -65,7 +65,7 @@ class JobController extends Controller
 
 
         // submit to database 
-        Job::create(attributes: $validatedData);
+        Job::create($validatedData);
         return redirect()->route("jobs.index")->with("success", "job listing created successfully");
     }
 
@@ -107,7 +107,7 @@ class JobController extends Controller
             "contact_phone" => "nullable|string",
             "company_name" => "required|string",
             "company_description" => "nullable|string",
-            "company_logo" => "nullable|image|mimes:jpeg,jpg,png,gif|max2048",
+            "company_logo" => "nullable|image|mimes:jpeg,jpg,png,gif|max:2048",
             "company_website" => "nullable|url"
         ]);
 
@@ -124,21 +124,24 @@ class JobController extends Controller
 
 
         // submit to database 
-        $job->update(attributes: $validatedData);
+        $job->update($validatedData);
         return redirect()->route("jobs.index")->with("success", "job listing updated successfully!");
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Job $job): RedirectResponse
+    public function destroy(Job $job)
     {
         // if logo delete it 
-        if($job->company_logo) {
+        if ($job->company_logo) {
             Storage::disk("public")->delete($job->company_logo);
         }
 
         $job->delete();
-        return redirect()->route('jobs.index')->with(   'success','Job lisiting deleted successfully!');
+        return redirect()->route('jobs.index')->with(
+            'success',
+            'Job listing deleted successfully!'
+        );
     }
 }

@@ -6,7 +6,7 @@
         <h2 class="text-4xl text-center font-bold mb-4">
             Edit Job Listing
         </h2>
-        <form method="POST" action="{{ route('jobs.update', $job->id) }}" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('jobs.edit') }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <h2 class="text-2xl font-bold mb-6 text-center text-gray-500">
