@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
-use App\Models\Job;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use App\Models\Job;
 
 class JobController extends Controller
 {
-
+    use AuthorizesRequests;
     // @desc Show jobs page form 
     // @route GET /jobs
     public function index(): View
@@ -21,7 +22,7 @@ class JobController extends Controller
 
     // @desc Show create page
     // @route GET /jobs/create
-    public function create(): View
+    public function create()
     {
         return view("jobs.create");
     }
@@ -54,7 +55,8 @@ class JobController extends Controller
         ]);
 
         //hardcoded userid cause of missing authentication yet 
-        $validatedData["user_id"] = 1;
+
+        $validatedData['user_id'] = auth()->id();
 
         if ($request->hasFile('company_logo')) {
             //store the file and get path
@@ -82,6 +84,9 @@ class JobController extends Controller
     // @route GET /jobs/{$id}/edit
     public function edit(Job $job): View
     {
+        // Check if user authorised
+        $this->authorize('update', $job);
+
         return view("jobs.edit")->with("job", $job);
     }
 
@@ -90,6 +95,8 @@ class JobController extends Controller
     // @route PUT /jobs/{$id}
     public function update(Request $request, Job $job): string
     {
+        // Check if user authorised
+        $this->authorize('update', $job);
         $validatedData = $request->validate([
             "title" => "required|string|max:255",
             "description" => "required|string",
@@ -132,6 +139,8 @@ class JobController extends Controller
     // @route DELETE /jobs/{$id}
     public function destroy(Job $job)
     {
+        // Check if user authorised
+        $this->authorize('delete', $job);
         // if logo delete it 
         if ($job->company_logo) {
             Storage::disk("public")->delete($job->company_logo);
