@@ -13,7 +13,7 @@
         </div>
     </div>
     <p class="text-gray-700 text-lg mt-2">
-        {{Str::limit($job->description, 150)}}
+        {{Str::limit($job->description, 90)}}
     </p>
     <ul class="my-4 bg-gray-100 p-4 rounded">
         <li class="mb-2"><strong>Salary:</strong> {{number_format($job->salary)}}</li>
