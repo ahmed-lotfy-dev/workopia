@@ -10,11 +10,9 @@ tasks:
   pre-deploy:
     - echo "Installing composer dependencies..."
     - composer install --no-dev --optimize-autoloader
-    - echo "Creating storage and cache directories..."
-    - mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache
-    - mkdir -p bootstrap/cache
+    - echo "Creating necessary Laravel directories..."
+    - mkdir -p storage/framework/{sessions,views,cache} bootstrap/cache
     - echo "Setting storage and cache permissions..."
-    - chown -R www-data:www-data storage bootstrap/cache
     - chmod -R 775 storage bootstrap/cache
   post-deploy:
     - echo "Clearing Laravel caches..."
