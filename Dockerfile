@@ -9,20 +9,17 @@ RUN apt-get update && apt-get install -y \
 # Set working directory
 WORKDIR /var/www
 
-# Copy composer.json & composer.lock first
+# Copy composer files first
 COPY composer.json composer.lock ./
+
+# Install Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader --ignore-platform-reqs
 
-# Copy the rest of the files
+# Copy the rest of the app
 COPY . .
-
-# Then run artisan commands
-RUN php artisan config:cache
-
-# Install dependencies
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
 # Create storage folders
 RUN mkdir -p storage/framework/{sessions,views,cache} storage/logs && \
