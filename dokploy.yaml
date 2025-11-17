@@ -4,12 +4,15 @@ repo: git@github.com:ahmed-lotfy-dev/workopia.git
 branch: main
 php: "8.4"
 server:
-  user: www-data  # user running PHP/FPM
+  user: www-data # user running PHP/FPM
   path: /var/www/workopia
 tasks:
   pre-deploy:
     - echo "Installing composer dependencies..."
     - composer install --no-dev --optimize-autoloader
+    - echo "Creating storage and cache directories..."
+    - mkdir -p storage/framework/sessions storage/framework/views storage/framework/cache
+    - mkdir -p bootstrap/cache
     - echo "Setting storage and cache permissions..."
     - chown -R www-data:www-data storage bootstrap/cache
     - chmod -R 775 storage bootstrap/cache
