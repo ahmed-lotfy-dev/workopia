@@ -1,19 +1,32 @@
 app: workopia
 repo: git@github.com:ahmed-lotfy-dev/workopia.git
 branch: main
+
 php: "8.4"
 
 server:
-  user: www-data
+  user: root
   path: /app
+
+volumes:
+  - storage:/app/storage
+  - bootstrap_cache:/app/bootstrap/cache
 
 tasks:
   pre-deploy:
+    - echo "Creating storage directories..."
+    - mkdir -p /app/storage/app
+    - mkdir -p /app/storage/framework/cache
+    - mkdir -p /app/storage/framework/sessions
+    - mkdir -p /app/storage/framework/views
+    - mkdir -p /app/storage/logs
+
+    - echo "Fixing permissions..."
+    - chmod -R 777 /app/storage
+    - chmod -R 777 /app/bootstrap/cache
+
     - echo "Installing composer dependencies..."
     - composer install --no-dev --optimize-autoloader
-    - echo "Setting storage permissions..."
-    - chown -R www-data:www-data storage bootstrap/cache
-    - chmod -R 775 storage bootstrap/cache
 
   post-deploy:
     - echo "Clearing Laravel caches..."
@@ -21,6 +34,13 @@ tasks:
     - php artisan cache:clear
     - php artisan view:clear
     - php artisan route:clear
+
+    - echo "Caching config..."
     - php artisan config:cache
+
     - echo "Running migrations..."
     - php artisan migrate --force
+
+volumes_definitions:
+  storage:
+  bootstrap_cache:
