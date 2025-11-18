@@ -1,19 +1,20 @@
-# dokploy.yaml
 app: workopia
 repo: git@github.com:ahmed-lotfy-dev/workopia.git
 branch: main
 php: "8.4"
+
 server:
-  user: www-data # user running PHP/FPM
-  path: /var/www/workopia
+  user: www-data
+  path: /app
+
 tasks:
   pre-deploy:
     - echo "Installing composer dependencies..."
     - composer install --no-dev --optimize-autoloader
-    - echo "Creating necessary Laravel directories..."
-    - mkdir -p storage/framework/{sessions,views,cache} bootstrap/cache
-    - echo "Setting storage and cache permissions..."
+    - echo "Setting storage permissions..."
+    - chown -R www-data:www-data storage bootstrap/cache
     - chmod -R 775 storage bootstrap/cache
+
   post-deploy:
     - echo "Clearing Laravel caches..."
     - php artisan config:clear
