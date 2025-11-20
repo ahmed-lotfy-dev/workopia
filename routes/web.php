@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
 Route::post('/jobs/{job}/apply', [ApplicantController::class, 'store'])->name('applicant.store')->middleware('auth');
 Route::delete('/applicants/{applicant}', [ApplicantController::class, 'destroy'])->name('applicant.destroy')->middleware('auth');
 
-// Route::get('/geocode', [GeocodeController::class, 'geocode']);
+Route::get('/geocode', [GeocodeController::class, 'geocode']);
 
 Route::get('/test-auth', function () {
   return [

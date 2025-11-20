@@ -22,7 +22,6 @@
     position: relative;
     z-index: 2;
 }
-
 [x-cloak] {
     display: none !important;
 }
