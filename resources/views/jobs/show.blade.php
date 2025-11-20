@@ -84,15 +84,15 @@
               class="block w-full text-center px-5 py-2.5 shadow-sm rounded border text-base font-medium cursor-pointer text-indigo-700 bg-indigo-100 hover:bg-indigo-200">
               Apply Now
             </button>
-            <div x-show="open" class="fixed inset-0 flex items-center justify-center bg-gray-900 opacity-90">
+            <div x-show="open" class="fixed inset-0 flex items-center justify-center bg-gray-900 opacity-90 z-9999 ">
               <div @click.away="open = false" class="bg-white p-6 rounded-lg shadow-md w-full max-w-md">
                 <h3 class="text-lg font-semibold mb-4">
                   Apply for {{ $job->title }}
                 </h3>
-                <form method="POST" action="{{ route('applicant.store',$job->id) }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('applicant.store', $job->id) }}" enctype="multipart/form-data">
                   @csrf
                   <x-inputs.text id="full_name" name="full_name" label="Full Name" :required="true" />
-                  <x-inputs.text id="contact_phone" name="contact_phone" label="Contact Phone" type="number" />
+                  <x-inputs.text id="contact_phone" name="contact_phone" label="Contact Phone" />
                   <x-inputs.text id="contact_email" name="contact_email" label="Contact Email" type="email"
                     :required="true" />
                   <x-inputs.text-area id="message" name="message" label="Message" />
@@ -163,3 +163,38 @@
     </aside>
   </div>
 </x-layout>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const city = '{{ $job->city }}';
+    const state = '{{ $job->state }}';
+    const address = '{{ $job->address ?? "{$job->city}, {$job->state}" }}';
+
+    fetch(`/geocode?address=${encodeURIComponent(address)}`)
+      .then(res => res.json())
+      .then(data => {
+
+        if (data.features && data.features.length > 0) {
+          const [lon, lat] = data.features[0].center;
+
+          const map = L.map('map').setView([lat, lon], 13);
+
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+          }).addTo(map);
+
+          L.marker([lat, lon])
+            .addTo(map)
+            .bindPopup(`<strong>{{ $job->title }}</strong><br>${city}, ${state}`)
+            .openPopup();
+
+        } else {
+          document.getElementById('map').innerHTML = 'Location not available';
+        }
+      })
+      .catch(err => {
+        console.error('Error fetching geocode:', err);
+        document.getElementById('map').innerHTML = 'Error loading map';
+      });
+  });
+</script>

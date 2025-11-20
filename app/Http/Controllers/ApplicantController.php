@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Applicant;
 use App\Models\Job;
+use App\Mail\JobApplied;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ApplicantController extends Controller
 {
@@ -21,7 +23,7 @@ class ApplicantController extends Controller
         if ($existingApplication) {
             return redirect()->back()->with("error", 'You have allready applied to this job ');
         }
-        
+
         $validatedData = $request->validate([
             'full_name' => 'required|string',
             'contact_phone' => 'nullable|string',
@@ -39,6 +41,9 @@ class ApplicantController extends Controller
         $application->job_id = $job->id;
         $application->user_id = auth()->id();
         $application->save();
+
+        // Send email to owner of the job listing 
+        Mail::to($job->user->email)->send(new JobApplied($application, $job));
 
         return redirect()->back()->with('success', 'Your application has been submitted');
     }
